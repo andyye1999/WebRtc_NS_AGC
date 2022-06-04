@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FD0D535C-7025-4A64-9EC0-B22835154B87}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>WebRtcAudioTest</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\WebRtcMoudle\analog_agc.h" />
+    <ClInclude Include="..\WebRtcMoudle\complex_fft_tables.h" />
+    <ClInclude Include="..\WebRtcMoudle\cpu_features_wrapper.h" />
+    <ClInclude Include="..\WebRtcMoudle\defines.h" />
+    <ClInclude Include="..\WebRtcMoudle\digital_agc.h" />
+    <ClInclude Include="..\WebRtcMoudle\fft4g.h" />
+    <ClInclude Include="..\WebRtcMoudle\gain_control.h" />
+    <ClInclude Include="..\WebRtcMoudle\noise_suppression.h" />
+    <ClInclude Include="..\WebRtcMoudle\noise_suppression_x.h" />
+    <ClInclude Include="..\WebRtcMoudle\nsx_core.h" />
+    <ClInclude Include="..\WebRtcMoudle\nsx_defines.h" />
+    <ClInclude Include="..\WebRtcMoudle\ns_core.h" />
+    <ClInclude Include="..\WebRtcMoudle\real_fft.h" />
+    <ClInclude Include="..\WebRtcMoudle\resample_by_2_internal.h" />
+    <ClInclude Include="..\WebRtcMoudle\ring_buffer.h" />
+    <ClInclude Include="..\WebRtcMoudle\signal_processing_library.h" />
+    <ClInclude Include="..\WebRtcMoudle\spl_inl.h" />
+    <ClInclude Include="..\WebRtcMoudle\typedefs.h" />
+    <ClInclude Include="..\WebRtcMoudle\windows_private.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\WebRtcMoudle\analog_agc.c" />
+    <ClCompile Include="..\WebRtcMoudle\complex_bit_reverse.c" />
+    <ClCompile Include="..\WebRtcMoudle\complex_fft.c" />
+    <ClCompile Include="..\WebRtcMoudle\copy_set_operations.c" />
+    <ClCompile Include="..\WebRtcMoudle\cross_correlation.c" />
+    <ClCompile Include="..\WebRtcMoudle\digital_agc.c" />
+    <ClCompile Include="..\WebRtcMoudle\division_operations.c" />
+    <ClCompile Include="..\WebRtcMoudle\dot_product_with_scale.c" />
+    <ClCompile Include="..\WebRtcMoudle\downsample_fast.c" />
+    <ClCompile Include="..\WebRtcMoudle\energy.c" />
+    <ClCompile Include="..\WebRtcMoudle\fft4g.c" />
+    <ClCompile Include="..\WebRtcMoudle\get_scaling_square.c" />
+    <ClCompile Include="..\WebRtcMoudle\min_max_operations.c" />
+    <ClCompile Include="..\WebRtcMoudle\noise_suppression.c" />
+    <ClCompile Include="..\WebRtcMoudle\noise_suppression_x.c" />
+    <ClCompile Include="..\WebRtcMoudle\nsx_core.c" />
+    <ClCompile Include="..\WebRtcMoudle\nsx_core_c.c" />
+    <ClCompile Include="..\WebRtcMoudle\nsx_core_neon_offsets.c" />
+    <ClCompile Include="..\WebRtcMoudle\ns_core.c" />
+    <ClCompile Include="..\WebRtcMoudle\real_fft.c" />
+    <ClCompile Include="..\WebRtcMoudle\resample.c" />
+    <ClCompile Include="..\WebRtcMoudle\resample_48khz.c" />
+    <ClCompile Include="..\WebRtcMoudle\resample_by_2.c" />
+    <ClCompile Include="..\WebRtcMoudle\resample_by_2_internal.c" />
+    <ClCompile Include="..\WebRtcMoudle\resample_by_2_mips.c" />
+    <ClCompile Include="..\WebRtcMoudle\resample_fractional.c" />
+    <ClCompile Include="..\WebRtcMoudle\ring_buffer.c" />
+    <ClCompile Include="..\WebRtcMoudle\splitting_filter.c" />
+    <ClCompile Include="..\WebRtcMoudle\spl_init.c" />
+    <ClCompile Include="..\WebRtcMoudle\spl_sqrt.c" />
+    <ClCompile Include="..\WebRtcMoudle\spl_sqrt_floor.c" />
+    <ClCompile Include="..\WebRtcMoudle\vector_scaling_operations.c" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="WebRtcAudioTest.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
