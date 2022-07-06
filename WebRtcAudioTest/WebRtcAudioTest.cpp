@@ -370,7 +370,7 @@ void WebRtcAgcTest(char* filename, char* outfilename, int fs)
 		 * kAgcModeAdaptiveDigital, // 自适应数字增益模式
 		 * kAgcModeFixedDigital  // 固定数字增益模式
 		 */
-		int agcMode = kAgcModeFixedDigital;    // 4种模式第一个模式是什么都不改变，但是会作削顶保护，然后是模拟增益自适应和数字增益自适应以及固定数字增益。
+		int agcMode = kAgcModeAdaptiveDigital;    // 4种模式第一个模式是什么都不改变，但是会作削顶保护，然后是模拟增益自适应和数字增益自适应以及固定数字增益。
 		/*
 		 * 固定数字增益模式最基础的增益模式也是 AGC 的核心，其他两种模式都是在此基础上扩展得到。主要是对信号进行固定增益的放大，
 		 * 最大增益不超过设置的增益能力 compressionGaindB，结合 limiter 使用的时候上限不超过设置的目标音量 targetLevelDbfs。
@@ -394,7 +394,9 @@ void WebRtcAgcTest(char* filename, char* outfilename, int fs)
 		WebRtcAgc_set_config(agcHandle, agcConfig);
 
 		infp = fopen(filename, "rb");
-		int frameSize = 80;    // size_t samples = MIN(160, sampleRate / 100);
+
+		int frameSize = min(160, fs / 100);
+		//int frameSize = 80;    // size_t samples = MIN(160, sampleRate / 100);
 		pData = (short*)malloc(frameSize * sizeof(short));
 		pOutData = (short*)malloc(frameSize * sizeof(short));
 
@@ -436,15 +438,16 @@ void WebRtcAgcTest(char* filename, char* outfilename, int fs)
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	WebRtcAgcTest("byby_8K_1C_16bit.pcm", "byby_8K_1C_16bit_agc.pcm", 8000);
+	WebRtcAgcTest("byby_8K_1C_16bit.pcm", "byby_8K_1C_16bit_agc_analog.pcm", 8000);
+	//WebRtcAgcTest("16k.pcm", "16k_agc.pcm", 16000);
 
-	NoiseSuppression32("lhydd_1C_16bit_32K.PCM", "lhydd_1C_16bit_32K_ns.pcm", 32000, 1); // 浮点运算
+	//NoiseSuppression32("lhydd_1C_16bit_32K.PCM", "lhydd_1C_16bit_32K_ns.pcm", 32000, 1); // 浮点运算
 
-	NoiseSuppression("gudao.pcm", "gudao_ns.pcm", 8000, 1); // 重新写了函数，可以实现8k 16k 32k采样率
-	NoiseSuppression32("gudao.pcm", "gudao_ns1.pcm", 32000, 1); //参数只能设置成32k 但能跑8k的数据 效果没更改的函数好 但设置成8k没有高频
+	//NoiseSuppression("gudao.pcm", "gudao_ns.pcm", 8000, 1); // 重新写了函数，可以实现8k 16k 32k采样率
+	//NoiseSuppression32("gudao.pcm", "gudao_ns1.pcm", 32000, 1); //参数只能设置成32k 但能跑8k的数据 效果没更改的函数好 但设置成8k没有高频
 	//NoiseSuppression("byby_8K_1C_16bit.pcm", "byby_8K_1C_16bit_ns.pcm", 8000, 1);
 
-	NoiseSuppressionX32("lhydd_1C_16bit_32K.PCM", "lhydd_1C_16bit_32K_nsx.pcm", 32000, 1); // 定点运算
+	//NoiseSuppressionX32("lhydd_1C_16bit_32K.PCM", "lhydd_1C_16bit_32K_nsx.pcm", 32000, 1); // 定点运算
 
 	printf("声音增益，降噪结束...\n");
 	getchar();

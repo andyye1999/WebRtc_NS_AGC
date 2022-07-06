@@ -88,8 +88,8 @@ int WebRtcNs_InitCore(NSinst_t* inst, uint32_t fs) {
     // We only support 10ms frames
     inst->blockLen = 80;
     inst->blockLen10ms = 80;
-    inst->anaLen = 128;
-    inst->window = kBlocks80w128;
+    inst->anaLen = 128;  // FFT长度
+    inst->window = kBlocks80w128;  // 窗函数，采用混合汉宁平顶窗函数
     inst->outLen = 0;
   } else if (fs == 16000) {
     // We only support 10ms frames
@@ -113,35 +113,37 @@ int WebRtcNs_InitCore(NSinst_t* inst, uint32_t fs) {
   memset(inst->dataBuf, 0, sizeof(float) * ANAL_BLOCKL_MAX);
   WebRtc_rdft(inst->anaLen, 1, inst->dataBuf, inst->ip, inst->wfft);
 
-  memset(inst->dataBuf, 0, sizeof(float) * ANAL_BLOCKL_MAX);
-  memset(inst->syntBuf, 0, sizeof(float) * ANAL_BLOCKL_MAX);
+  memset(inst->dataBuf, 0, sizeof(float) * ANAL_BLOCKL_MAX);  // dataBuf存储的是原始时域信号
+  memset(inst->syntBuf, 0, sizeof(float) * ANAL_BLOCKL_MAX);  //syntBuf是谱减法，减去噪声后变换到时域的信号
 
-  //for HB processing
+  //for HB processing 这是高频部分，最多有两个band
   memset(inst->dataBufHB, 0, sizeof(float) * ANAL_BLOCKL_MAX);
 
-  //for quantile noise estimation
+  //for quantile noise estimation 用于分位数噪声估计
   memset(inst->quantile, 0, sizeof(float) * HALF_ANAL_BLOCKL);
+  //3帧同步估计，lquantile是对数分位数。density是概率密度，计算分位数用到概率密度的。
   for (i = 0; i < SIMULT * HALF_ANAL_BLOCKL; i++) {
     inst->lquantile[i] = (float)8.0;
     inst->density[i] = (float)0.3;
   }
-
+  //我的理解counter是一个权值，代表的每一帧对分位数估计而言其所占的比重。
   for (i = 0; i < SIMULT; i++) {
     inst->counter[i] = (int)floor((float)(END_STARTUP_LONG * (i + 1)) / (float)SIMULT);
   }
 
   inst->updates = 0;
 
-  // Wiener filter initialization
+  // Wiener filter initialization 维纳滤波器初始化
   for (i = 0; i < HALF_ANAL_BLOCKL; i++) {
     inst->smooth[i] = (float)1.0;
   }
 
-  // Set the aggressiveness: default
+  // Set the aggressiveness: default 
+  // 设置抑制噪声的激进度 默认值
   inst->aggrMode = 0;
-
+  // 噪声估计使用到的
   //initialize variables for new method
-  inst->priorSpeechProb = (float)0.5; //prior prob for speech/noise
+  inst->priorSpeechProb = (float)0.5; //prior prob for speech/noise 语音/噪音的先前概率
   for (i = 0; i < HALF_ANAL_BLOCKL; i++) {
     inst->magnPrev[i]      = (float)0.0; //previous mag spectrum
     inst->noisePrev[i]     = (float)0.0; //previous noise-spectrum
@@ -530,21 +532,24 @@ void WebRtcNs_FeatureParameterExtraction(NSinst_t* inst, int flag) {
 // spectral flatness is returned in inst->featureData[0]
 void WebRtcNs_ComputeSpectralFlatness(NSinst_t* inst, float* magnIn) {
   int i;
-  int shiftLP = 1; //option to remove first bin(s) from spectral measures
+  int shiftLP = 1; //option to remove first bin(s) from spectral measures  去掉直流分量
   float avgSpectralFlatnessNum, avgSpectralFlatnessDen, spectralTmp;
 
   // comute spectral measures
   // for flatness
   avgSpectralFlatnessNum = 0.0;
   avgSpectralFlatnessDen = inst->sumMagn;
+  // 跳过第一个频点，即直流频点Den是denominator（分母）的缩写，avgSpectralFlatnessDen是上述公式分母计算用到的
   for (i = 0; i < shiftLP; i++) {
     avgSpectralFlatnessDen -= magnIn[i];
   }
   // compute log of ratio of the geometric to arithmetic mean: check for log(0) case
+  // 计算分子部分，numerator(分子)，对log(0)是无穷小的值，所以计算时对这一情况特殊处理。
   for (i = shiftLP; i < inst->magnLen; i++) {
     if (magnIn[i] > 0.0) {
       avgSpectralFlatnessNum += (float)log(magnIn[i]);
     } else {
+      // TVAG是time-average的缩写，对于能量出现异常的处理。利用前一次平坦度直接取平均返回。
       inst->featureData[0] -= SPECT_FL_TAVG * inst->featureData[0];
       return;
     }
@@ -866,7 +871,7 @@ int WebRtcNs_ProcessCore(NSinst_t* inst,
     WebRtc_rdft(inst->anaLen, 1, winData, inst->ip, inst->wfft);
 
     imag[0] = 0;
-    real[0] = winData[0];
+    real[0] = winData[0];  // 直流分量
     magn[0] = (float)(fabs(real[0]) + 1.0f);
     imag[inst->magnLen - 1] = 0;
     real[inst->magnLen - 1] = winData[1];
